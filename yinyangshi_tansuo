@@ -1,0 +1,1215 @@
+//简易注册大漠
+PutAttachment ".\plugin", "RegDll.dll"
+PutAttachment ".\plugin\dm", "dm.dll"
+PutAttachment "c:\test_game", "*.*"
+Plugin.RegDll.Reg (Plugin.sys.GetDir(0) + "\plugin\dm\dm.dll")
+
+Set dm = createobject("dm.dmsoft")
+dm_ret = dm.SetPath(Plugin.sys.GetDir(0) + "\plugin\dm")'设置目录
+
+//检查是否创建成功
+//ver = dm.ver()
+//If len(ver) = 0 Then
+//	MessageBox "插件注册失败,检查系统是否禁用了vbs脚本权限"
+//	EndScript
+//Else
+//	MessageBox "插件注册成功,当前使用的版本是:"&ver
+//End If
+
+//hwnd = dm.GetMousePointWindow()//返回鼠标当前窗口的句柄
+
+//dm_ret = dm.BindWindow(hwnd, "gdi", "windows", "windows", 0)//模式1一直绑定失败，不懂为什么，换了4可以了,但是不能截图
+//TracePrint "窗口句柄为"&hwnd&"后台窗口是否绑定"&dm_ret
+
+Dim yanchi//设置延迟变量
+yanchi = 20//默认100 延迟一般为1秒，设为10，延迟为0.1秒
+//TracePrint "脚本启动中,默认延迟系数为"&yanchi
+
+Dim pic_path //存放图片的路径
+pic_path = "C:\Users\caodi\Documents\阴阳师电脑版按键精灵\桌面版960 540 魂土\" 
+
+global fuben1
+fuben1 = 0//0时，表示不在探索中,1时，表示正在探索中
+global fuben2
+fuben2 = 0//0时，表示不在探索中
+Global move_times
+move_times = 0 //记录移动次数
+
+Global time_out
+
+//以下测试代码
+//dm_ret = dm.CapturePng(0,0,2000,2000,"screen.png")截图
+
+//定位阴阳师客户端左上角
+
+global fanwei_x 
+fanwei_x = 0  //+960 3
+global fanwei_y
+fanwei_y = 0  //+570 93
+
+Dim fanwei1_x //准备界面，换狗粮的识别区域
+fanwei1_x = 100
+Dim fanwei1_y
+fanwei1_y = 120
+Dim fanwei2_x 
+fanwei2_x = 460 //460为第二只式神，670为第三只式神，第三只为狗粮队长，不需要换掉
+Dim fanwei_y2
+fanwei2_y = 450
+
+Sub 定位阴阳师客户端位置
+//点击探索
+dm.FindPic 0,0,960,540,pic_path&"阴阳师网易游戏.bmp", "000000", 1, 0, intX, intY
+
+If intX > 0 And intY > 0 Then 
+fanwei_x = intX
+fanwei_Y = intY
+TracePrint fanwei_x&","&fanwei_y
+
+    
+End If
+End Sub
+Call 定位阴阳师客户端位置
+
+
+Sub 点击加号
+dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570,pic_path&"加号.bmp", "000000", 0.9, 0, intX, intY
+
+If intX > 0 And intY > 0 Then 
+intX = intX + int(Rnd * 40 - 10)
+intY = intY + int(Rnd * 40 - 20)
+
+TracePrint "点击加号"
+delay int(Rnd * 10 + 3)*yanchi
+dm.MoveTo intX, intY//点击加上随机数之后的坐标
+Call m_oneclick
+    
+
+
+intX = fanwei_x-3 + int(Rnd * 20 + 360)
+intY = fanwei_y-93 + int(Rnd * 16 + 292)
+
+TracePrint "点击队友"
+delay int(Rnd * 10 + 3)*yanchi
+dm.MoveTo intX, intY//点击加上随机数之后的坐标
+Call m_oneclick
+
+intX = fanwei_x-3 + int(Rnd * 20 + 570)
+intY = fanwei_y-93 + int(Rnd * 16 + 552)
+
+TracePrint "点击队友"
+delay int(Rnd * 10 + 3)*yanchi
+dm.MoveTo intX, intY//点击加上随机数之后的坐标
+Call m_oneclick
+
+End If
+
+End Sub
+
+
+Sub 点击队友
+dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570,pic_path&"队友.bmp", "101010", 1.0, 0, intX, intY
+
+If intX > 0 And intY > 0 Then 
+intX = intX + int(Rnd * 40 - 10)
+intY = intY + int(Rnd * 40 - 20)
+
+TracePrint "点击队友"
+delay int(Rnd * 10 + 3)*yanchi
+dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3)*yanchi
+    dm.leftdown
+    Delay int(Rnd * 10 + 3)*yanchi
+    dm.leftup
+    Delay int(Rnd * 10 + 3) * yanchi
+End If
+
+End Sub
+
+Sub 点击邀请
+dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570,pic_path&"邀请.bmp", "000000", 0.9, 0, intX, intY
+
+If intX > 0 And intY > 0 Then 
+intX = intX + int(Rnd * 30 + 40)
+intY = intY + int(Rnd * 15 + 15)
+
+TracePrint "邀请队友"
+delay int(Rnd * 10 + 3)*yanchi
+dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3)*yanchi
+    dm.leftdown
+    Delay int(Rnd * 10 + 3)*yanchi
+    dm.leftup
+    Delay int(Rnd * 10 + 3) * yanchi
+end if	
+End Sub
+
+Sub 点击挑战
+dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570,pic_path&"挑战.bmp", "000000", 0.9, 0, intX, intY
+
+If intX > 0 And intY > 0 Then 
+intX = intX + int(Rnd * 40 - 20)
+intY = intY + int(Rnd * 40 - 20)
+
+TracePrint "开始挑战"
+delay int(Rnd * 10 + 3)*yanchi
+dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3)*yanchi
+    dm.leftdown
+    Delay int(Rnd * 10 + 3)*yanchi
+    dm.leftup
+    Delay int(Rnd * 10 + 3) * yanchi
+    
+    fuben1 = 1//表示正在探索中
+    fuben2 = 1
+    TracePrint"1和2在副本中"
+    move_times = 0
+end if
+	
+End Sub
+
+Sub 点击接受邀请
+//第二个窗口中
+
+
+dm.FindPic fanwei_x,fanwei_y+570,fanwei_x+960,fanwei_y+570+570,pic_path&"接受邀请.bmp", "000000", 0.9, 0, intX, intY
+
+If intX > 0 And intY > 0 Then 
+intX = intX + int(Rnd * 30 - 15)
+intY = intY + int(Rnd * 25 + 5)
+
+TracePrint "接受邀请"
+delay int(Rnd * 10 + 3)*yanchi
+dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3)*yanchi
+    dm.leftdown
+    Delay int(Rnd * 10 + 3)*yanchi
+    dm.leftup
+    Delay int(Rnd * 10 + 3) * yanchi
+end if
+	
+End Sub
+
+
+Sub timer
+	//TracePrint"开始计时"
+	Delay 3000
+	//TracePrint"运行3秒"
+	time_out = True
+End Sub
+
+Sub timer2	
+	Delay 1500//1.5S识别满级怪的时间，之后点击准备
+	time2_out = True
+End Sub
+
+Function 点击妖怪
+    
+ 	time_id = BeginThread(timer)
+	time_out = False
+    While 1
+    	//PK妖怪
+      	dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570, pic_path&"妖怪.bmp", "000000", 0.8, 0, intX, intY
+		If intX > 0 And intY > 0 Then 
+			intX = intX + int(Rnd * 20 - 10)
+			intY = intY + int(Rnd * 18 - 9)
+
+			TracePrint "发现妖怪"
+			StopThread time_id
+		
+			dm.MoveTo intX, intY//点击加上随机数之后的坐标
+			Delay int(Rnd * 10 + 3)*yanchi
+    
+   		    dm.leftdown
+   		    Delay int(Rnd * 10 + 3)*yanchi
+   
+   			dm.leftup
+   			Delay int(Rnd * 10 + 3) * yanchi
+   			
+   			Delay int(Rnd * 1000 + 3000)//点击妖怪后，模拟器大概需要5S才有画面
+   		
+   			//如果1进入战斗，2需要点击准备
+			dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570, pic_path&"战斗中画面.bmp", "000000", 0.8, 0, intX, intY
+			If intX > 0 And intY > 0 Then 
+				TracePrint"进入战斗画面"
+		
+   				Call 点击准备
+   			
+   				Exit Function
+   			Else 
+   				Exit Function
+   			End if
+   		End if
+   			
+   		
+   		//PK首领
+   		dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570, pic_path&"首领.bmp", "000000", 0.8, 0, intX, intY
+		If intX > 0 And intY > 0 Then 
+			intX = intX + int(Rnd * 40 - 10)
+			intY = intY + int(Rnd * 35 - 10)
+			TracePrint "发现首领"
+			
+			StopThread time_id
+		
+			dm.MoveTo intX, intY//点击加上随机数之后的坐标
+			Delay int(Rnd * 10 + 3)*yanchi
+    
+   		    dm.leftdown
+   		    Delay int(Rnd * 10 + 3)*yanchi
+   
+   			dm.leftup
+   			Delay int(Rnd * 10 + 3) * yanchi
+   			
+   			Delay int(Rnd * 1000 + 3000)//点击妖怪后，模拟器大概需要5S才有画面
+   			
+   					//如果发现确实是在战斗中
+			dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570, pic_path&"战斗中画面.bmp", "000000", 0.8, 0, intX, intY
+			If intX > 0 And intY > 0 Then 
+				TracePrint"进入战斗画面"
+				
+   				Call 点击准备
+   				//结算后退出探索，出现结算画面or直接退出（没有奖励）
+   				
+   				Exit Function
+   			Else 
+   				Exit Function
+   			End if	
+   		End If
+  			
+   		If time_out = True  Then    			
+   			TracePrint"识别超时"   			
+   			Call move_right//没有妖怪和首领之后，一直执行move_ringht,知道退出副本
+   			Exit Function	
+   		End If
+	
+    Wend
+    	
+End Function
+
+sub 退出探索副本
+	//情况1 移动超过6次之后需要退出探索
+	//打完首领可能直接退出了，需要判断所处画面
+	call 界面判断
+
+    While fuben1 = 1 or fuben2 = 1//只要有一个为1，说明有窗口还没退出探索
+    call 界面判断
+    	//窗口1发现退出按钮
+      	dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570, pic_path&"退出.bmp", "000000", 0.8, 0, intX, intY
+		If intX > 0 And intY > 0 Then 
+			intX = intX + int(Rnd * 10 + 13)
+			intY = intY + int(Rnd * 10 + 6)
+			TracePrint "发现退出按钮"
+		
+			dm.MoveTo intX, intY//点击加上随机数之后的坐标
+			Delay int(Rnd * 10 + 3)*yanchi
+    
+   		    dm.leftdown
+   		    Delay int(Rnd * 10 + 3)*yanchi
+   
+   			dm.leftup
+   			Delay int(Rnd * 10 + 3) * yanchi
+		End if	
+			
+		//如果发现确定按钮
+		dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570, pic_path&"退出探索确认.bmp", "000000", 0.8, 0, intX, intY
+		If intX > 0 And intY > 0 Then 
+			TracePrint"确定退出探索"			
+   			Call 退出探索确认 //点击之后 fuben1=7		
+   		End If
+   
+   		//窗口2发现退出按钮
+      	dm.FindPic fanwei_x,fanwei_y+570,fanwei_x+960,fanwei_y+570+570, pic_path&"退出.bmp", "000000", 0.8, 0, intX, intY
+		If intX > 0 And intY > 0 Then 
+			intX = intX + int(Rnd * 10 + 13)
+			intY = intY + int(Rnd * 10 + 6)
+			TracePrint "发现退出按钮"
+
+			dm.MoveTo intX, intY//点击加上随机数之后的坐标
+			Delay int(Rnd * 10 + 3)*yanchi
+    
+   		    dm.leftdown
+   		    Delay int(Rnd * 10 + 3)*yanchi
+   
+   			dm.leftup
+   			Delay int(Rnd * 10 + 3) * yanchi
+		End If
+		//如果发现确定按钮
+		dm.FindPic fanwei_x,fanwei_y+570,fanwei_x+960,fanwei_y+570+570, pic_path&"退出探索确认.bmp", "000000", 0.8, 0, intX, intY
+		If intX > 0 And intY > 0 Then 
+			TracePrint"确定退出探索"			
+   			Call 退出探索确认2		
+   		End if			
+   				
+   	wend			
+End sub
+
+Function 点击准备
+    time2_out = false
+ 	time2_id = BeginThread(timer2)//开启第二个时间进程
+
+    While 1
+    	
+      	dm.FindPic 164, 805, 700, 1065, pic_path & "满.bmp", "202020", 0.8, 0, intX, intY
+      	
+      	//发现满级妖怪，换狗粮
+      	If intX > 0 And intY > 0 Then 
+      		TracePrint"发现满级狗粮"
+      		Delay int(Rnd * 500 + 200)
+      		Call 开始换狗粮
+			//位置1
+			Delay int(Rnd * 500 + 200)
+			dm.FindPic 71,760,218,964, pic_path & "满.bmp", "202020", 0.8, 0, intX, intY
+			If intX > 0 And intY > 0 Then 
+				TracePrint"换1狗粮" 
+				position_1 = 1
+				Delay int(Rnd * 200 + 200)
+ 				Call 更换位置1的狗粮
+				StopThread time_id
+   			End If
+   			//位置2
+   			Delay int(Rnd * 500 + 200)
+   			dm.FindPic 353,760,600,1000, pic_path&"满.bmp", "202020", 0.8, 0, intX, intY
+			If intX > 0 And intY > 0 Then 
+			    TracePrint"换2狗粮"
+				position_2 = 1
+				Delay int(Rnd * 200 + 200)
+				Call 更换位置2的狗粮
+				StopThread time_id
+			End If
+			//位置3
+			Delay int(Rnd * 500 + 200)
+   			dm.FindPic 700,760,900,1000 , pic_path&"满3.bmp", "202020", 0.8, 0, intX, intY
+			If intX > 0 And intY > 0 Then 
+			    TracePrint"换3狗粮"
+				position_2 = 1
+				Delay int(Rnd * 200 + 200)
+				Call 更换位置3的狗粮
+				StopThread time_id
+			End If
+			//位置3有时候识别不了，增加识别次数
+			Delay int(Rnd * 500 + 200)
+   			dm.FindPic 700,760,900,1000 , pic_path&"满1.bmp", "202020", 0.8, 0, intX, intY
+			If intX > 0 And intY > 0 Then 
+			    TracePrint"换3狗粮"
+				position_2 = 1
+				Delay int(Rnd * 200 + 200)
+				Call 更换位置3的狗粮
+				StopThread time_id
+			End If
+			
+
+   			If time2_out = True Then
+   				dm.FindPic fanwei_x,fanwei_y+570,fanwei_x+960,fanwei_y+570+570, pic_path&"准备.bmp", "000000", 0.8, 0, intX, intY
+   				If intX > 0 And intY > 0 Then 
+   					TracePrint "点击准备"
+   			
+   					intX = intX + int(Rnd * 10 + 25)
+					intY = intY + int(Rnd * 12 + 14)
+   					dm.MoveTo intX, intY//点击加上随机数之后的坐标
+					Delay int(Rnd * 10 + 3)*yanchi
+    
+   		   			dm.leftdown
+   		    		Delay int(Rnd * 10 + 3)*yanchi
+   
+   					dm.leftup
+   					Delay int(Rnd * 10 + 3)*yanchi
+   	
+   					Exit Function
+   					
+   				End If
+   			End if
+   		Else 
+   			dm.FindPic fanwei_x,fanwei_y+570,fanwei_x+960,fanwei_y+570+570, pic_path&"准备.bmp", "000000", 0.8, 0, intX, intY
+   				If intX > 0 And intY > 0 Then 
+   					TracePrint "点击准备"
+   			
+   					intX = intX + int(Rnd * 10 + 25)
+					intY = intY + int(Rnd * 12 + 14)
+   					dm.MoveTo intX, intY//点击加上随机数之后的坐标
+					Delay int(Rnd * 10 + 3)*yanchi
+    
+   		   			dm.leftdown
+   		    		Delay int(Rnd * 10 + 3)*yanchi
+   
+   					dm.leftup
+   					Delay int(Rnd * 10 + 3) * yanchi
+   				
+   					Exit Function
+   				els 
+   					
+   					TracePrint "找不到准备按钮"
+   					Call 退出探索
+   					Call 退出探索2
+   					Exit Function
+   					
+   				End If
+   		
+
+   		End If
+	
+    Wend
+    	
+End Function
+
+Sub 开始换狗粮
+	intX = fanwei_x-3 + 300  + int(Rnd * 120 - 60)
+	intY = fanwei_y-93 + 1060 + int(Rnd * 40 - 20)
+	
+	TracePrint "开始换狗粮"
+	Delay int(Rnd * 500 + 500)
+
+	dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3) * yanchi
+	
+	Call m_doubleclick
+	
+	Delay int(Rnd * 500 + 1500)
+	
+	//点击全部
+	intX = 51 + int(Rnd * 16 - 8) + fanwei_x-3
+	intY = 1187 + int(Rnd * 14 - 7) + fanwei_y-93
+	
+	TracePrint "点击全部"
+	
+	dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3) * yanchi
+	Call m_oneclick
+	
+	Delay int(Rnd * 500 + 500)
+	//转为N卡
+	intX = 129 + int(Rnd * 16 - 8) + fanwei_x-3
+	intY = 946 + int(Rnd * 14 - 7) + fanwei_y-93
+	
+	TracePrint "点击N卡"
+	
+	dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3) * yanchi
+	Call m_oneclick
+	
+	Delay int(Rnd * 500 + 500)
+	Call 拖动狗粮条
+	
+	
+End Sub
+
+Sub m_oneclick
+	
+	dm.leftdown
+   	Delay int(Rnd * 10 + 3)*yanchi
+   
+    dm.leftup
+   	Delay int(Rnd * 10 + 3) * yanchi
+	
+End Sub
+
+Sub m_doubleclick
+	
+	dm.leftdown
+   	Delay int(Rnd * 10 + 3)*yanchi
+   
+    dm.leftup
+   	Delay int(Rnd * 10 + 3) * yanchi
+   	
+   	Delay int(Rnd * 100 + 300)
+   	
+   	dm.leftdown
+   	Delay int(Rnd * 10 + 3)*yanchi
+   
+    dm.leftup
+   	Delay int(Rnd * 10 + 3)*yanchi	
+	
+End Sub
+
+Sub 更换位置1的狗粮
+//点击全部式神 从第四只换到位置1
+
+
+intX = 430 + int(Rnd * 30 - 15)
+intY = 1120 + int(Rnd * 40 - 20)
+
+TracePrint "从第四只换到位置1"
+delay int(Rnd * 500 + 500)
+dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3)*yanchi
+    
+    dm.leftdown
+	Delay int(Rnd * 10 + 3) * yanchi
+	
+	intX = intX - int(84 + Rnd * 8)
+	intY = intY - int(82 + Rnd * 20)
+	dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3) * yanchi
+	
+	intX = intX - int(104 + Rnd * 8)
+	intY = intY - int(45 + Rnd * 10)
+	dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3) * yanchi
+	
+	intX = intX - int(72 + Rnd * 10)
+	intY = intY - int(60 + Rnd * 14)
+	dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3)*yanchi
+
+	intX = intX + int(-5 + Rnd * 10)
+	intY = intY + int(-15 + Rnd * 30)
+	dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3) * yanchi
+	
+	dm.leftup
+	Delay int(Rnd * 10 + 3) * yanch
+	
+    
+
+End Sub
+
+Sub 更换位置2的狗粮
+//点击全部式神 从第5只换到位置2
+
+
+intX = 560 + int(Rnd * 30 - 15)
+intY = 1120 + int(Rnd * 40 - 20)
+
+TracePrint "从第5只换到位置2"
+delay int(Rnd * 500 + 500)
+dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3)*yanchi
+    
+    dm.leftdown
+	Delay int(Rnd * 10 + 3) * yanchi
+	
+	intX = intX - int(15 + Rnd * 4)
+	intY = intY - int(70 + Rnd * 20)
+	dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3) * yanchi
+	
+	intX = intX - int(15 + Rnd * 4)
+	intY = intY - int(85 + Rnd * 10)
+	dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3) * yanchi
+	
+	intX = intX - int(16 + Rnd * 4)
+	intY = intY - int(45 + Rnd * 14)
+	dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3)*yanchi
+
+	intX = intX + int(-3 + Rnd * 5)
+	intY = intY + int(-15 + Rnd * 30)
+	dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3) * yanchi
+	
+	dm.leftup
+	Delay int(Rnd * 10 + 3) * yanch
+	
+    
+
+End Sub
+
+Sub 更换位置3的狗粮
+//点击全部式神 从第7只换到位置3 位置3默认为狗粮队长位
+
+
+intX = 720+ int(Rnd * 30 - 15)
+intY = 1120 + int(Rnd * 40 - 20)
+
+TracePrint "从第7只换到位置3"
+delay int(Rnd * 500 + 500)
+dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3)*yanchi
+    
+    dm.leftdown
+	Delay int(Rnd * 10 + 3) * yanchi
+	
+	intX = intX + int(20 + Rnd * 4)
+	intY = intY - int(70 + Rnd * 20)
+	dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3) * yanchi
+	
+	intX = intX + int(15 + Rnd * 4)
+	intY = intY - int(85 + Rnd * 10)
+	dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3) * yanchi
+	
+	intX = intX + int(20 + Rnd * 4)
+	intY = intY - int(45 + Rnd * 14)
+	dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3)*yanchi
+
+	intX = intX + int(15 + Rnd * 5)
+	intY = intY + int(-15 + Rnd * 30)
+	dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3) * yanchi
+	
+	dm.leftup
+	Delay int(Rnd * 10 + 3) * yanch
+	
+    
+
+End Sub
+
+Sub 拖动狗粮条
+//用樱饼纸人定位
+dm.FindPic fanwei_x,fanwei_y+570,fanwei_x+960,fanwei_y+570+570, pic_path&"狗粮条.bmp", "101010", 0.9, 0, intX, intY
+
+If intX > 0 And intY > 0 Then 
+	TracePrint "向右拖动狗粮"
+	
+	intX = intX + int(8 + Rnd * 5)
+	intY = intY + int(5 + Rnd * 3)
+	dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3)*yanchi
+   
+    dm.leftdown
+	Delay int(Rnd * 10 + 3) * yanchi
+	
+	intX = intX + int(20 + Rnd * 5)
+	intY = intY + int(5 + Rnd * 3)
+	dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3) * yanchi
+	
+	intX = intX + int(10 + Rnd * 15)
+	intY = intY + int(5 + Rnd * 3)
+	dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3) * yanchi
+	
+	intX = intX + int(20 + Rnd * 5)
+	intY = intY + int(5 + Rnd * 3)
+	dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3)*yanchi
+
+	intX = intX + int(10 + Rnd * 15)
+	intY = intY + int(5 + Rnd * 3)
+	dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3) * yanchi
+
+	
+    dm.leftup
+    Delay int(Rnd * 10 + 3) * yanchi
+    
+End If
+End Sub
+
+Sub move_right
+//用樱饼纸人定位
+
+dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570, pic_path&"纸人.bmp", "000000", 0.8, 0, intX, intY
+If intX > 0 And intY > 0 Then 
+	TracePrint "向右移动"
+	
+	intX = intX - int(25 + Rnd * 80)
+	intY = intY - int(45 + Rnd * 50)
+	dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3)*yanchi
+   
+    dm.leftdown
+	Delay int(Rnd * 10 + 3) * yanchi
+	
+    dm.leftup
+    Delay int(Rnd * 10 + 3) * yanchi
+    
+    move_times = move_times + 1 
+    TracePrint"移动了"&move_times&"次"
+	If move_times > 3 Then //如果移动超过5次就退出探索副本	
+		Call 退出探索副本
+	End If
+End If
+
+//如果队长直接退出，来不及点击退出按钮
+dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570, pic_path&"继续邀请.bmp", "000000", 0.8, 0, intX, intY
+If intX > 0 And intY > 0 Then 
+	TracePrint "副本1已经退出"
+	fuben1 = 0
+	Call 退出探索副本
+End If
+
+End Sub
+
+Sub 点击胜利
+//点击胜利
+dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570, pic_path&"胜利.bmp", "101010", 0.8, 0, intX, intY
+
+If intX > 0 And intY > 0 Then 
+TracePrint "战斗胜利"
+intX = intX + int(Rnd * 300 - 150)
+intY = intY + int(Rnd * 20 - 40 )
+
+
+dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 5)*yanchi
+    
+    dm.leftdown
+    Delay int(Rnd * 10 + 5)*yanchi
+   
+    dm.leftup
+    TracePrint "点击"
+    Delay int(Rnd * 10 + 5) * yanchi 
+    Delay int(Rnd * 10 + 40) * yanchi
+
+    Call 随机点击
+    Call 点击战利品1 //加快点击窗口2的战利品
+
+End If
+End Sub
+
+Sub 点击胜利1
+//第二个窗口点击胜利
+dm.FindPic fanwei_x,fanwei_y+570,fanwei_x+960,fanwei_y+570+570, pic_path&"胜利.bmp", "101010", 0.8, 0, intX, intY
+
+If intX > 0 And intY > 0 Then 
+TracePrint "战斗胜利"
+intX = intX + int(Rnd * 300 - 150)
+intY = intY + int(Rnd * 20 - 40 )
+
+
+dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 5)*yanchi
+    
+    dm.leftdown
+    Delay int(Rnd * 10 + 5)*yanchi
+   
+    dm.leftup
+    TracePrint "点击"
+    Delay int(Rnd * 10 + 5) * yanchi 
+    Delay int(Rnd * 10 + 40)*yanchi
+    
+   
+    Call 随机点击
+
+End If
+End Sub
+
+Sub 点击战利品
+//点击战利品
+dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570, pic_path&"战利品.bmp", "101010", 0.8, 0, intX, intY
+
+If intX > 0 And intY > 0 Then 
+TracePrint "找到战利品"
+intX = intX + int(Rnd * 100 - 50)
+intY = intY + int(Rnd * 30 - 15)
+
+
+dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3)*yanchi
+   
+    dm.leftdown
+    Delay int(Rnd * 10 + 3)*yanchi
+   
+    dm.leftup
+    TracePrint "点击"
+    Delay int(Rnd * 10 + 10) * yanchi
+    Delay int(Rnd * 20 + 40)*yanchi
+   
+    dm.leftdown
+    Delay int(Rnd * 10 + 3)*yanchi
+    
+    dm.leftup
+    TracePrint "点击"
+    Delay int(Rnd * 10 + 3) * yanchi
+    
+    Call 随机点击
+	Delay 500
+	Call 点击战利品1
+    
+
+End If
+End Sub
+
+Sub 点击战利品1
+//第二个窗口点击战利品
+dm.FindPic fanwei_x,fanwei_y+570,fanwei_x+960,fanwei_y+570+570, pic_path&"战利品.bmp", "101010", 0.8, 0, intX, intY
+
+If intX > 0 And intY > 0 Then 
+TracePrint "找到战利品"
+intX = intX + int(Rnd * 100 - 50)
+intY = intY + int(Rnd * 30 - 15)
+
+
+dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3)*yanchi
+   
+    dm.leftdown
+    Delay int(Rnd * 10 + 3)*yanchi
+   
+    dm.leftup
+    TracePrint "点击"
+    Delay int(Rnd * 10 + 10) * yanchi
+    Delay int(Rnd * 20 + 40)*yanchi
+   
+    dm.leftdown
+    Delay int(Rnd * 10 + 3)*yanchi
+    
+    dm.leftup
+    TracePrint "点击"
+    Delay int(Rnd * 10 + 3) * yanchi
+    
+    Call 随机点击
+
+    
+
+End If
+End Sub
+
+Sub 结束战斗重新开始
+//用于脚本重新开始
+dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570+570, pic_path&"战利品.bmp", "101010", 0.8, 0, intX, intY
+
+If intX > 0 And intY > 0 Then 
+TracePrint "找到战利品"
+intX = intX + int(Rnd * 100 - 50)
+intY = intY + int(Rnd * 30 - 15)
+
+
+dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3)*yanchi
+   
+    dm.leftdown
+    Delay int(Rnd * 10 + 3)*yanchi
+   
+    dm.leftup
+    TracePrint "点击"
+    Delay int(Rnd * 10 + 10) * yanchi
+    Delay int(Rnd * 20 + 40)*yanchi
+   
+    dm.leftdown
+    Delay int(Rnd * 10 + 3)*yanchi
+    
+    dm.leftup
+    TracePrint "点击"
+    Delay int(Rnd * 10 + 3) * yanchi
+    
+	fuben = 0
+	move_times = 0
+
+    
+
+End If
+End Sub
+
+Sub 点击战利品2
+//点击战力品(打完首领，直接退出)
+dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570, pic_path&"战利品.bmp", "000000", 0.8, 0, intX, intY
+
+If intX > 0 And intY > 0 Then 
+TracePrint "打完首领"
+intX = intX + int(Rnd * 100 - 50)
+intY = intY + int(Rnd * 30 - 15)
+
+
+dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3)*yanchi
+   
+    dm.leftdown
+    Delay int(Rnd * 10 + 3)*yanchi
+   
+    dm.leftup
+    TracePrint "点击"
+    Delay int(Rnd * 10 + 10) * yanchi
+    Delay int(Rnd * 20 + 40)*yanchi
+   
+    dm.leftdown
+    Delay int(Rnd * 10 + 3)*yanchi
+    
+    dm.leftup
+    TracePrint "点击"
+    Delay int(Rnd * 10 + 3) * yanchi
+
+End If
+End Sub
+
+Sub 退出探索
+//第一个窗口
+dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570, pic_path&"退出.bmp", "000000", 0.9, 0, intX, intY
+
+If intX > 0 And intY > 0 Then 
+TracePrint "退出探索"
+intX = intX + int(Rnd * 10 + 13)
+intY = intY + int(Rnd * 10 + 6)
+
+
+dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3)*yanchi
+   
+	call m_doubleclick
+	
+    
+    Delay 2000
+    call 退出探索确认
+
+End If
+End Sub
+
+Sub 退出探索2
+//第二个窗口
+dm.FindPic fanwei_x,fanwei_y+570,fanwei_x+960,fanwei_y+570+570, pic_path&"退出.bmp", "000000", 0.9, 0, intX, intY
+
+If intX > 0 And intY > 0 Then 
+TracePrint "退出探索"
+intX = intX + int(Rnd * 10 + 13)
+intY = intY + int(Rnd * 10 + 6)
+
+
+dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3)*yanchi
+   
+    dm.leftdown
+    Delay int(Rnd * 10 + 3)*yanchi
+   
+    dm.leftup
+
+    Delay int(Rnd * 10 + 3) * yanchi
+    
+    Delay 2000
+    call 退出探索确认2
+
+End If
+End Sub
+
+Sub 退出探索确认
+//第一个窗口
+dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570, pic_path&"退出探索确认.bmp", "000000", 0.8, 0, intX, intY
+
+If intX > 0 And intY > 0 Then 
+TracePrint "退出探索确认"
+Delay int(Rnd * 10 + 3)*yanchi
+
+intX = intX + int(Rnd * 90 + 30)
+intY = intY + int(Rnd * 20 + 10)
+
+
+dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3)*yanchi
+   
+	Call m_doubleclick
+	
+	Delay int(Rnd * 2000 + 4000)
+	
+	fuben1 = 0
+	TracePrint"1在副本外"
+End If
+End Sub
+
+Sub 退出探索确认2
+//第二个窗口
+dm.FindPic fanwei_x,fanwei_y+570,fanwei_x+960,fanwei_y+570+570, pic_path&"退出探索确认.bmp", "000000", 0.8, 0, intX, intY
+
+If intX > 0 And intY > 0 Then 
+TracePrint "退出探索确认"
+Delay int(Rnd * 10 + 3)*yanchi
+
+intX = intX + int(Rnd * 90 + 30)
+intY = intY + int(Rnd * 20 + 10)
+
+
+dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3)*yanchi
+   
+    dm.leftdown
+    Delay int(Rnd * 10 + 3)*yanchi
+   
+    dm.leftup
+
+    Delay int(Rnd * 10 + 3) * yanchi
+    
+    fuben2 = 0
+ 	TracePrint"2在副本外"
+End If
+End Sub
+
+Sub 继续邀请
+//继续邀请确认
+//点击战力品(打完首领，直接退出)
+dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570, pic_path&"继续邀请.bmp", "000000", 0.9, 0, intX, intY
+
+If intX > 0 And intY > 0 Then 
+TracePrint "继续邀请确认"
+Delay int(Rnd * 500 + 100)
+
+intX = intX + int(Rnd * 32 + 237)
+intY = intY + int(Rnd * 16 + 129)
+
+
+dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3)*yanchi
+   
+    Call m_doubleclick
+
+    
+
+End If
+End Sub
+
+Sub 界面判断
+dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570, pic_path&"继续邀请.bmp", "000000", 0.9, 0, intX, intY
+If intX > 0 And intY > 0 Then 
+	TracePrint "1在探索外面"
+	fuben1 = 0
+End If
+
+dm.FindPic fanwei_x, fanwei_y, fanwei_x + 960, fanwei_y + 570, pic_path & "妖.bmp", "000000", 0.9, 0, intX, intY
+If intX > 0 And intY > 0 Then 
+	TracePrint "1在探索外面"
+	fuben1 = 0
+End If
+
+dm.FindPic fanwei_x, fanwei_y, fanwei_x + 960, fanwei_y + 570, pic_path & "协战队伍.bmp", "000000", 0.9, 0, intX, intY
+If intX > 0 And intY > 0 Then 
+	TracePrint "1在探索外面"
+	fuben1 = 0
+End If
+
+dm.FindPic fanwei_x, fanwei_y+570, fanwei_x + 960, fanwei_y + 570+570, pic_path & "协战队伍.bmp", "000000", 0.9, 0, intX, intY
+If intX > 0 And intY > 0 Then 
+	TracePrint "2在探索外面"
+	fuben1 = 0
+End If
+dm.FindPic fanwei_x, fanwei_y+570, fanwei_x + 960, fanwei_y + 570+570, pic_path & "妖.bmp", "000000", 0.9, 0, intX, intY
+If intX > 0 And intY > 0 Then 
+	TracePrint "2在探索外面"
+	fuben1 = 0
+End If
+dm.FindPic fanwei_x, fanwei_y+570, fanwei_x + 960, fanwei_y + 570+570, pic_path & "卷轴.bmp", "000000", 0.9, 0, intX, intY
+If intX > 0 And intY > 0 Then 
+	TracePrint "2在探索外面"
+	fuben2 = 0
+End If
+dm.FindPic fanwei_x, fanwei_y+570, fanwei_x + 960, fanwei_y + 570+570, pic_path & "组队.bmp", "000000", 0.9, 0, intX, intY
+If intX > 0 And intY > 0 Then 
+	TracePrint "2在探索外面"
+	fuben2 = 0
+End If
+dm.FindPic fanwei_x, fanwei_y+570, fanwei_x + 960, fanwei_y + 570+570, pic_path & "探索.bmp", "000000", 0.9, 0, intX, intY
+If intX > 0 And intY > 0 Then 
+	TracePrint "2在探索外面"
+	fuben2 = 0
+End If
+dm.FindPic fanwei_x, fanwei_y+570, fanwei_x + 960, fanwei_y + 570+570, pic_path & "战利品.bmp", "000000", 0.9, 0, intX, intY
+If intX > 0 And intY > 0 Then 
+	TracePrint "2在探索外面"
+	fuben2 = 1
+End If
+dm.FindPic fanwei_x, fanwei_y+570, fanwei_x + 960, fanwei_y + 570+570, pic_path & "卷轴关.bmp", "000000", 0.9, 0, intX, intY
+If intX > 0 And intY > 0 Then 
+	TracePrint "2在探索外面"
+	fuben2 = 1
+End If
+Call 点击胜利1
+Call 点击战利品1
+End Sub
+
+Sub 随机点击
+	//随机点击次数
+Dim A
+A = int(Rnd * 10 + 1)
+TracePrint A
+If A > 5 Then 
+TracePrint"增加一次点击"
+ 
+GetCursorPos x, y
+intX = x
+intY = y
+dm.MoveTo intX, intY
+	Delay int(Rnd * 10 + 3)*yanchi
+    dm.leftdown
+    Delay int(Rnd * 10 + 3)*yanchi
+    dm.leftup
+    TracePrint "点击"
+    Delay int(Rnd * 10 + 3) * yanchi  
+	
+End If
+
+End Sub
+Sub 排除异常
+//不小心点到人物
+dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570, pic_path&"人物误触.bmp", "000000", 0.8, 0, intX, intY
+If intX > 0 And intY > 0 Then 
+TracePrint "出现误触异常"
+Delay int(Rnd * 10 + 3)*yanchi
+intX = intX - int(Rnd * 90 + 30)
+intY = intY - int(Rnd * 20 + 10)
+dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3)*yanchi
+   
+	Call m_doubleclick
+	
+	Delay int(Rnd * 2000 + 4000)
+
+End If
+
+//不小心点到妖气
+dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570, pic_path&"妖气封印.bmp", "000000", 0.8, 0, intX, intY
+If intX > 0 And intY > 0 Then 
+TracePrint "出现误触异常"
+Delay int(Rnd * 10 + 3)*yanchi
+intX = intX - int(Rnd * 90 + 30)
+intY = intY - int(Rnd * 20 + 10)
+dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3)*yanchi
+   
+	Call m_doubleclick
+	
+	Delay int(Rnd * 2000 + 4000)
+
+End If
+//不小心点到式神
+dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570, pic_path&"关闭.bmp", "000000", 0.8, 0, intX, intY
+If intX > 0 And intY > 0 Then 
+TracePrint "出现误触异常"
+Delay int(Rnd * 10 + 3)*yanchi
+intX = intX - int(Rnd * 90 + 30)
+intY = intY - int(Rnd * 20 + 10)
+dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3)*yanchi
+   
+	Call m_doubleclick
+	
+	Delay int(Rnd * 2000 + 4000)
+
+End If
+
+
+
+End Sub
+TracePrint"start"
+
+
+Call 点击挑战
+Call 点击接受邀请
+
+
+While 1
+//如果没有卡住
+
+Call 点击挑战
+
+Call 结束战斗重新开始
+Call 结束战斗重新开始
+
+Call 继续邀请
+Call 点击加号
+
+Call 点击队友
+Call 点击邀请
+Call 点击接受邀请
+Call 点击挑战
+Call 排除异常
+
+call 退出探索确认
+Call 退出探索确认2
+	While fuben1 = 1 or fuben2 = 1 //在副本中时
+		//找到妖怪
+ 
+		TracePrint "战斗吧"
+		TracePrint fuben1&"和"&fuben2
+		
+		Call 点击妖怪
+	
+		Call 点击胜利
+		Call 点击胜利1
+		
+		Call 点击战利品1
+		Call 点击战利品
+		Call 排除异常
+		Call 界面判断
+	Wend 
+TracePrint"退出循环"	
+Wend
+
+
