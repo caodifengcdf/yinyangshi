@@ -70,50 +70,112 @@ End If
 End Sub
 Call 定位阴阳师客户端位置
 
+Sub m_oneclick
+	
+	dm.leftdown
+   	Delay int(Rnd * 10 + 3)*yanchi
+   
+    dm.leftup
+   	Delay int(Rnd * 10 + 3) * yanchi
+	
+End Sub
 
-Sub 点击加号
-dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570,pic_path&"加号.bmp", "000000", 0.9, 0, intX, intY
-
-If intX > 0 And intY > 0 Then 
-intX = intX + int(Rnd * 40 - 10)
-intY = intY + int(Rnd * 40 - 20)
-
-TracePrint "点击加号"
-delay int(Rnd * 10 + 3)*yanchi
-dm.MoveTo intX, intY//点击加上随机数之后的坐标
-Call m_oneclick
-    
-
-
-intX = fanwei_x-3 + int(Rnd * 20 + 360)
-intY = fanwei_y-93 + int(Rnd * 16 + 292)
-
-TracePrint "点击队友"
-delay int(Rnd * 10 + 3)*yanchi
-dm.MoveTo intX, intY//点击加上随机数之后的坐标
-Call m_oneclick
-
-intX = fanwei_x-3 + int(Rnd * 20 + 570)
-intY = fanwei_y-93 + int(Rnd * 16 + 552)
-
-TracePrint "点击队友"
-delay int(Rnd * 10 + 3)*yanchi
-dm.MoveTo intX, intY//点击加上随机数之后的坐标
-Call m_oneclick
-
-End If
-
+Sub m_doubleclick
+	
+	dm.leftdown
+   	Delay int(Rnd * 10 + 3)*yanchi
+   
+    dm.leftup
+   	Delay int(Rnd * 10 + 3) * yanchi
+   	
+   	Delay int(Rnd * 100 + 300)
+   	
+   	dm.leftdown
+   	Delay int(Rnd * 10 + 3)*yanchi
+   
+    dm.leftup
+   	Delay int(Rnd * 10 + 3)*yanchi	
+	
 End Sub
 
 
-Sub 点击队友
-dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570,pic_path&"队友.bmp", "101010", 1.0, 0, intX, intY
+Sub 开始邀请队友
+//进入组队界面，开始邀请队友
+dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570,pic_path&"灰色挑战.bmp", "000000", 0.8, 0, intX, intY
+If intX > 0 And intY > 0 Then 
+	intX = fanwei_x-3 + 820 + int(Rnd * 40 - 20)
+	intY = fanwei_y-93 + 320 + int(Rnd * 40 - 20)
+
+	TracePrint "点击加号"
+	delay int(Rnd * 10 + 3)*yanchi
+
+	dm.MoveTo intX, intY
+	Call m_oneclick
+	
+	findteam_time = now
+	while DateDiff("s",findteam_time,now)< 2 //如果小于2秒，继续找队友
+			
+    	dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570,pic_path&"队友.bmp", "000000", 0.9, 0, intX, intY
+		If intX > 0 And intY > 0 Then 
+			intX = intX + int(Rnd * 40 + 10)
+			intY = intY + int(Rnd * 40 )
+			TracePrint "点击队友"
+			delay int(Rnd * 10 + 3)*yanchi
+			dm.MoveTo intX, intY
+			Call m_oneclick
+			
+			findchoseteam_time = now
+			While DateDiff("s", findchoseteam_time, now) < 2
+				dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570,pic_path&"已选中队友.bmp", "151515", 0.8, 0, intX, intY
+				If intX > 0 And intY > 0 Then 
+					intX = fanwei_x -3  + 550 + int(Rnd * 40 + 15)
+					intY = fanwei_y -93 + 540 + int(Rnd * 20 + 10)
+					TracePrint "点击邀请"
+					delay int(Rnd * 10 + 3)*yanchi
+
+					dm.MoveTo intX, intY
+					Call m_oneclick
+					
+					accept_time = now
+					While DateDiff("s", accept_time, now) < 2
+						dm.FindPic fanwei_x,fanwei_y+570,fanwei_x+960,fanwei_y+570+570,pic_path&"接受邀请.bmp", "000000", 0.9, 0, intX, intY
+						If intX > 0 And intY > 0 Then 
+							TracePrint intY
+							intX = intX + int(Rnd * 10 - 5)
+							intY = intY + int(Rnd * 25 + 5)
+							TracePrint "接受邀请"
+							delay int(Rnd * 10 + 3)*yanchi
+
+							dm.MoveTo intX, intY
+							Call m_oneclick
+				
+						End If
+					wend
+					
+					
+				End if
+			
+			wend
+			
+			
+		End if
+	wend
+
+end if		
+	
+End Sub
+
+Sub 点击接受邀请
+//第二个窗口中
+
+
+dm.FindPic fanwei_x,fanwei_y+570,fanwei_x+960,fanwei_y+570+570,pic_path&"接受邀请.bmp", "000000", 0.9, 0, intX, intY
 
 If intX > 0 And intY > 0 Then 
-intX = intX + int(Rnd * 40 - 10)
-intY = intY + int(Rnd * 40 - 20)
+intX = intX + int(Rnd * 30 - 15)
+intY = intY + int(Rnd * 25 + 5)
 
-TracePrint "点击队友"
+TracePrint "接受邀请"
 delay int(Rnd * 10 + 3)*yanchi
 dm.MoveTo intX, intY//点击加上随机数之后的坐标
 	Delay int(Rnd * 10 + 3)*yanchi
@@ -121,27 +183,11 @@ dm.MoveTo intX, intY//点击加上随机数之后的坐标
     Delay int(Rnd * 10 + 3)*yanchi
     dm.leftup
     Delay int(Rnd * 10 + 3) * yanchi
-End If
-
+end if
+	
 End Sub
 
-Sub 点击邀请
-dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570,pic_path&"邀请.bmp", "000000", 0.9, 0, intX, intY
 
-If intX > 0 And intY > 0 Then 
-intX = intX + int(Rnd * 30 + 40)
-intY = intY + int(Rnd * 15 + 15)
-
-TracePrint "邀请队友"
-delay int(Rnd * 10 + 3)*yanchi
-dm.MoveTo intX, intY//点击加上随机数之后的坐标
-	Delay int(Rnd * 10 + 3)*yanchi
-    dm.leftdown
-    Delay int(Rnd * 10 + 3)*yanchi
-    dm.leftup
-    Delay int(Rnd * 10 + 3) * yanchi
-end if	
-End Sub
 
 Sub 点击挑战
 dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570,pic_path&"挑战.bmp", "000000", 0.9, 0, intX, intY
@@ -167,27 +213,6 @@ end if
 	
 End Sub
 
-Sub 点击接受邀请
-//第二个窗口中
-
-
-dm.FindPic fanwei_x,fanwei_y+570,fanwei_x+960,fanwei_y+570+570,pic_path&"接受邀请.bmp", "000000", 0.9, 0, intX, intY
-
-If intX > 0 And intY > 0 Then 
-intX = intX + int(Rnd * 30 - 15)
-intY = intY + int(Rnd * 25 + 5)
-
-TracePrint "接受邀请"
-delay int(Rnd * 10 + 3)*yanchi
-dm.MoveTo intX, intY//点击加上随机数之后的坐标
-	Delay int(Rnd * 10 + 3)*yanchi
-    dm.leftdown
-    Delay int(Rnd * 10 + 3)*yanchi
-    dm.leftup
-    Delay int(Rnd * 10 + 3) * yanchi
-end if
-	
-End Sub
 
 
 Sub timer
@@ -342,6 +367,7 @@ sub 退出探索副本
    	wend			
 End sub
 
+
 Function 点击准备
     time2_out = false
  	time2_id = BeginThread(timer2)//开启第二个时间进程
@@ -491,33 +517,6 @@ Sub 开始换狗粮
 	
 End Sub
 
-Sub m_oneclick
-	
-	dm.leftdown
-   	Delay int(Rnd * 10 + 3)*yanchi
-   
-    dm.leftup
-   	Delay int(Rnd * 10 + 3) * yanchi
-	
-End Sub
-
-Sub m_doubleclick
-	
-	dm.leftdown
-   	Delay int(Rnd * 10 + 3)*yanchi
-   
-    dm.leftup
-   	Delay int(Rnd * 10 + 3) * yanchi
-   	
-   	Delay int(Rnd * 100 + 300)
-   	
-   	dm.leftdown
-   	Delay int(Rnd * 10 + 3)*yanchi
-   
-    dm.leftup
-   	Delay int(Rnd * 10 + 3)*yanchi	
-	
-End Sub
 
 Sub 更换位置1的狗粮
 //点击全部式神 从第四只换到位置1
@@ -985,6 +984,7 @@ dm.MoveTo intX, intY//点击加上随机数之后的坐标
 	TracePrint"1在副本外"
 End If
 End Sub
+Call 退出探索确认
 
 Sub 退出探索确认2
 //第二个窗口
@@ -1183,11 +1183,7 @@ Call 结束战斗重新开始
 Call 结束战斗重新开始
 
 Call 继续邀请
-Call 点击加号
-
-Call 点击队友
-Call 点击邀请
-Call 点击接受邀请
+Call 开始邀请队友
 Call 点击挑战
 Call 排除异常
 
