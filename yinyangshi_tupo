@@ -1,0 +1,288 @@
+//简易注册大漠
+PutAttachment ".\plugin", "RegDll.dll"
+PutAttachment ".\plugin\dm", "dm.dll"
+PutAttachment "c:\test_game", "*.*"
+Plugin.RegDll.Reg (Plugin.sys.GetDir(0) + "\plugin\dm\dm.dll")
+
+Set dm = createobject("dm.dmsoft")
+dm_ret = dm.SetPath(Plugin.sys.GetDir(0) + "\plugin\dm")'设置目录
+
+//检查是否创建成功
+//ver = dm.ver()
+//If len(ver) = 0 Then
+//	MessageBox "插件注册失败,检查系统是否禁用了vbs脚本权限"
+//	EndScript
+//Else
+//	MessageBox "插件注册成功,当前使用的版本是:"&ver
+//End If
+
+//hwnd = dm.GetMousePointWindow()//返回鼠标当前窗口的句柄
+
+//dm_ret = dm.BindWindow(hwnd, "gdi", "windows", "windows", 0)//模式1一直绑定失败，不懂为什么，换了4可以了,但是不能截图
+//TracePrint "窗口句柄为"&hwnd&"后台窗口是否绑定"&dm_ret
+
+Dim yanchi//设置延迟变量
+yanchi = 20//默认100 延迟一般为1秒，设为10，延迟为0.1秒
+//TracePrint "脚本启动中,默认延迟系数为"&yanchi
+
+Dim pic_path //存放图片的路径
+pic_path = "C:\Users\caodi\Documents\阴阳师电脑版按键精灵\桌面版960 540 魂土\" 
+
+tupo_imgpath = pic_path & "突破对象1.bmp" & "|" & pic_path & "突破对象2.bmp" & "|" & pic_path & "突破对象3.bmp" & "|" & pic_path & "突破对象4.bmp" & "|" & pic_path & "突破对象5.bmp" & "|" & pic_path & "突破对象6.bmp" & "|" & pic_path & "突破对象7.bmp" & "|" & pic_path & "突破对象8.bmp" & "|" & pic_path & "突破对象9.bmp"
+jingong_imgpath = pic_path & "进攻1.bmp" & "|" & pic_path & "进攻2.bmp" & "|" & pic_path & "进攻3.bmp" & "|" & pic_path & "进攻4.bmp" & "|" & pic_path & "进攻5.bmp" & "|" & pic_path & "进攻6.bmp" & "|" & pic_path & "进攻7.bmp" & "|" & pic_path & "进攻8.bmp" & "|" & pic_path & "进攻9.bmp"
+
+//以下测试代码
+//dm_ret = dm.CapturePng(0,0,2000,2000,"screen.png")截图
+
+//定位阴阳师客户端左上角
+
+global fanwei_x 
+fanwei_x = 0  //+960 3
+global fanwei_y
+fanwei_y = 0  //+570 93
+
+Dim fanwei1_x //准备界面，换狗粮的识别区域
+fanwei1_x = 100
+Dim fanwei1_y
+fanwei1_y = 120
+Dim fanwei2_x 
+fanwei2_x = 460 //460为第二只式神，670为第三只式神，第三只为狗粮队长，不需要换掉
+Dim fanwei_y2
+fanwei2_y = 450
+
+Sub 定位阴阳师客户端位置
+//点击探索
+dm.FindPic 0,0,960,540,pic_path&"阴阳师网易游戏.bmp", "000000", 1, 0, intX, intY
+
+If intX > 0 And intY > 0 Then 
+fanwei_x = intX
+fanwei_Y = intY
+
+
+    
+End If
+End Sub
+Call 定位阴阳师客户端位置
+
+sub 点击突破对象
+find_tupotime = now
+
+While DateDiff("s", find_tupotime, now) < 2
+dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570,tupo_imgpath, "000000", 0.95, 0, intX, intY 
+If intX > 0 And intY > 0 Then 
+	intX = intX + int(Rnd * 40 + 20)
+	intY = intY + int(Rnd * 15 + 5)
+	
+	TracePrint "点击突破对象"
+	delay int(Rnd * 10 + 3)*yanchi
+	dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Call m_oneclick
+	
+	find_jingongtime = now
+	While DateDiff("s", find_jingongtime, now) < 3
+	dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570,jingong_imgpath, "050505", 0.95, 0, intX, intY 
+	If intX > 0 And intY > 0 Then 
+		intX = intX + int(Rnd * 40 + 20)
+		intY = intY + int(Rnd * 25 + 5)
+	
+		TracePrint "进攻"
+		delay int(Rnd * 10 + 3)*yanchi
+		dm.MoveTo intX, intY//点击加上随机数之后的坐标
+		Call m_oneclick
+	end if
+	Wend
+Else 
+	find_shuaxintime = now
+	While DateDiff("s", find_shuaxintime, now) < 3
+		dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570,pic_path&"刷新.bmp", "000000", 0.95, 0, intX, intY
+
+		If intX > 0 And intY > 0 Then 
+			intX = intX + int(Rnd * 40 - 20) + 48 
+			intY = intY + int(Rnd * 40 - 20) + 20
+
+			TracePrint "点击刷新"
+			delay int(Rnd * 10 + 3)*yanchi
+			dm.MoveTo intX, intY//点击加上随机数之后的坐标
+			Call m_oneclick
+			
+			find_quedingtime = now
+			While DateDiff("s", find_quedingtime, now) < 2
+				dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570,pic_path&"刷新确定.bmp", "000000", 0.9, 0, intX, intY
+
+				If intX > 0 And intY > 0 Then 
+					intX = intX + int(Rnd * 40 - 20) + 246
+					intY = intY + int(Rnd * 40 - 20) + 143
+
+					TracePrint "点击刷新"
+					delay int(Rnd * 10 + 3)*yanchi
+					dm.MoveTo intX, intY//点击加上随机数之后的坐标
+					Call m_oneclick
+				End if
+    		wend
+		end if
+		
+	wend
+
+end if
+
+Wend
+End Sub
+
+Sub 点击进攻
+	find_jingongstime = now
+	While DateDiff("s", find_jingongstime, now) < 1
+	dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570,jingong_imgpath, "050505", 0.95, 0, intX, intY 
+	If intX > 0 And intY > 0 Then 
+		intX = intX + int(Rnd * 40 + 20)
+		intY = intY + int(Rnd * 25 + 5)
+	
+		TracePrint "进攻"
+		delay int(Rnd * 10 + 3)*yanchi
+		dm.MoveTo intX, intY//点击加上随机数之后的坐标
+		Call m_oneclick
+	end if
+	Wend
+End Sub
+
+Sub 检查突破券数量
+	
+		dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570,pic_path&"突破券0.bmp", "050505", 0.9, 0, intX, intY 
+		If intX > 0 And intY > 0 Then 
+			MessageBox "突破完成"
+			Delay 1000*60*60*10 //休眠10小时
+		End if
+	
+End Sub
+
+
+Sub 点击刷新
+dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570,pic_path&"刷新.bmp", "000000", 1.0, 0, intX, intY
+
+If intX > 0 And intY > 0 Then 
+intX = intX + int(Rnd * 40 - 20) + 48 
+intY = intY + int(Rnd * 40 - 20) + 20
+
+TracePrint "开始进攻"
+delay int(Rnd * 10 + 3)*yanchi
+dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3)*yanchi
+    dm.leftdown
+    Delay int(Rnd * 10 + 3)*yanchi
+    dm.leftup
+    Delay int(Rnd * 10 + 3) * yanchi
+    
+   
+end if
+	
+End Sub
+
+
+
+
+
+
+
+
+Sub m_oneclick
+	Delay int(Rnd * 10 + 3)*yanchi
+	dm.leftdown
+   	Delay int(Rnd * 10 + 3)*yanchi
+   
+    dm.leftup
+   	Delay int(Rnd * 10 + 3) * yanchi
+	
+End Sub
+
+Sub m_doubleclick
+	Delay int(Rnd * 10 + 3)*yanchi
+	dm.leftdown
+   	Delay int(Rnd * 10 + 3)*yanchi
+   
+    dm.leftup
+   	Delay int(Rnd * 10 + 3) * yanchi
+   	
+   	Delay int(Rnd * 100 + 300)
+   	
+   	dm.leftdown
+   	Delay int(Rnd * 10 + 3)*yanchi
+   
+    dm.leftup
+   	Delay int(Rnd * 10 + 3)*yanchi	
+	
+End Sub
+
+
+Sub 点击胜利
+//点击胜利
+dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570, pic_path&"胜利.bmp", "101010", 0.9, 0, intX, intY
+
+If intX > 0 And intY > 0 Then 
+TracePrint "战斗胜利"
+intX = intX + int(Rnd * 300 - 150)
+intY = intY + int(Rnd * 20 - 40 )
+
+
+dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 5)*yanchi
+    
+    dm.leftdown
+    Delay int(Rnd * 10 + 5)*yanchi
+   
+    dm.leftup
+    TracePrint "点击"
+    Delay int(Rnd * 10 + 5) * yanchi 
+    Delay int(Rnd * 10 + 40) * yanchi
+
+End If
+End Sub
+Sub 点击失败
+//点击胜利
+dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570, pic_path&"失败.bmp", "101010", 0.9, 0, intX, intY
+
+If intX > 0 And intY > 0 Then 
+TracePrint "战斗失败"
+intX = intX + int(Rnd * 300 - 150)
+intY = intY + int(Rnd * 20 - 40 )
+
+
+dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 5)*yanchi
+    
+    dm.leftdown
+    Delay int(Rnd * 10 + 5)*yanchi
+   
+    dm.leftup
+    TracePrint "点击"
+    Delay int(Rnd * 10 + 5) * yanchi 
+    Delay int(Rnd * 10 + 40) * yanchi
+
+End If
+End Sub
+
+
+Sub 点击战利品
+//点击战利品
+dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570, pic_path&"战利品.bmp", "101010", 0.9, 0, intX, intY
+
+If intX > 0 And intY > 0 Then 
+	TracePrint "找到战利品"
+	intX = intX + int(Rnd * 100 - 50)
+	intY = intY + int(Rnd * 30 - 15)
+
+
+	dm.MoveTo intX, intY//点击加上随机数之后的坐标
+
+    Call m_oneclick
+  
+    
+
+End If
+End Sub
+
+Call 检查突破券数量
+Call 点击进攻
+Call 点击突破对象
+
+Call 点击胜利
+Call 点击失败
+Call 点击战利品
