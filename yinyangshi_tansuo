@@ -37,6 +37,7 @@ move_times = 0 //记录移动次数
 
 Global time_out
 
+
 //以下测试代码
 //dm_ret = dm.CapturePng(0,0,2000,2000,"screen.png")截图
 
@@ -172,8 +173,8 @@ Sub 点击接受邀请
 dm.FindPic fanwei_x,fanwei_y+570,fanwei_x+960,fanwei_y+570+570,pic_path&"接受邀请.bmp", "000000", 0.9, 0, intX, intY
 
 If intX > 0 And intY > 0 Then 
-intX = intX + int(Rnd * 30 - 15)
-intY = intY + int(Rnd * 25 + 5)
+intX = intX + int(Rnd * 20 - 10)
+intY = intY + int(Rnd * 30 + 20)
 
 TracePrint "接受邀请"
 delay int(Rnd * 10 + 3)*yanchi
@@ -1127,7 +1128,7 @@ intY = intY - int(Rnd * 20 + 10)
 dm.MoveTo intX, intY//点击加上随机数之后的坐标
 	Delay int(Rnd * 10 + 3)*yanchi
    
-	Call m_doubleclick
+	Call m_oneclick
 	
 	Delay int(Rnd * 2000 + 4000)
 
@@ -1167,7 +1168,25 @@ End If
 
 
 End Sub
-TracePrint"start"
+
+Sub 接受悬赏
+dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570+570, pic_path&"悬赏接受.bmp", "000000", 0.8, 0, intX, intY
+If intX > 0 And intY > 0 Then 
+TracePrint "接受悬赏"
+Delay int(Rnd * 10 + 3)*yanchi
+intX = intX + 250 + int(Rnd * 20 - 10)
+intY = intY + 196 + int(Rnd * 20 - 10)
+dm.MoveTo intX, intY//点击加上随机数之后的坐标
+	Delay int(Rnd * 10 + 3)*yanchi
+   
+	Call m_doubleclick
+	
+	Delay int(Rnd * 2000 + 4000)
+
+End If	
+End Sub
+TracePrint "start"
+
 
 
 Call 点击挑战
@@ -1183,14 +1202,17 @@ Call 结束战斗重新开始
 Call 结束战斗重新开始
 
 Call 继续邀请
+Call 点击接受邀请
 Call 开始邀请队友
 Call 点击挑战
 Call 排除异常
+Call 接受悬赏
 
 call 退出探索确认
 Call 退出探索确认2
 	While fuben1 = 1 or fuben2 = 1 //在副本中时
 		//找到妖怪
+		Call 点击挑战 //有时候点击挑战无反应
  
 		TracePrint "战斗吧"
 		TracePrint fuben1&"和"&fuben2
@@ -1203,6 +1225,7 @@ Call 退出探索确认2
 		Call 点击战利品1
 		Call 点击战利品
 		Call 排除异常
+		Call 接受悬赏
 		Call 界面判断
 	Wend 
 TracePrint"退出循环"	
