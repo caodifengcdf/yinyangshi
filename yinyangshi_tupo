@@ -92,36 +92,7 @@ If intX > 0 And intY > 0 Then
 	end if
 	Wend
 Else 
-	find_shuaxintime = now
-	While DateDiff("s", find_shuaxintime, now) < 3
-		dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570,pic_path&"刷新.bmp", "000000", 0.95, 0, intX, intY
-
-		If intX > 0 And intY > 0 Then 
-			intX = intX + int(Rnd * 40 - 20) + 48 
-			intY = intY + int(Rnd * 40 - 20) + 20
-
-			TracePrint "点击刷新"
-			delay int(Rnd * 10 + 3)*yanchi
-			dm.MoveTo intX, intY//点击加上随机数之后的坐标
-			Call m_oneclick
-			
-			find_quedingtime = now
-			While DateDiff("s", find_quedingtime, now) < 2
-				dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570,pic_path&"刷新确定.bmp", "000000", 0.9, 0, intX, intY
-
-				If intX > 0 And intY > 0 Then 
-					intX = intX + int(Rnd * 40 - 20) + 246
-					intY = intY + int(Rnd * 40 - 20) + 143
-
-					TracePrint "点击刷新"
-					delay int(Rnd * 10 + 3)*yanchi
-					dm.MoveTo intX, intY//点击加上随机数之后的坐标
-					Call m_oneclick
-				End if
-    		wend
-		end if
-		
-	wend
+	Call 突破刷新
 
 end if
 
@@ -155,26 +126,7 @@ Sub 检查突破券数量
 End Sub
 
 
-Sub 点击刷新
-dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570,pic_path&"刷新.bmp", "000000", 1.0, 0, intX, intY
 
-If intX > 0 And intY > 0 Then 
-intX = intX + int(Rnd * 40 - 20) + 48 
-intY = intY + int(Rnd * 40 - 20) + 20
-
-TracePrint "开始进攻"
-delay int(Rnd * 10 + 3)*yanchi
-dm.MoveTo intX, intY//点击加上随机数之后的坐标
-	Delay int(Rnd * 10 + 3)*yanchi
-    dm.leftdown
-    Delay int(Rnd * 10 + 3)*yanchi
-    dm.leftup
-    Delay int(Rnd * 10 + 3) * yanchi
-    
-   
-end if
-	
-End Sub
 
 
 
@@ -278,6 +230,56 @@ If intX > 0 And intY > 0 Then
 
 End If
 End Sub
+jipo_imgpath = pic_path&"突破击破.bmp"&"|"&pic_path&"突破失败.bmp"
+
+
+Function 突破刷新
+TracePrint 11111111111111
+find_jipotime = now
+While DateDiff("s", find_jipotime, now) < 2
+dm.FindPic fanwei_x+630,fanwei_y+326,fanwei_x+960,fanwei_y+570,jipo_imgpath, "000000", 0.95, 0, intX, intY 
+    If intX > 0 And intY > 0 Then 
+	intX = intX + int(Rnd * 40 + 20)
+	intY = intY + int(Rnd * 15 + 5)
+	
+	TracePrint "第九个已突破/失败"
+	delay int(Rnd * 10 + 3)*yanchi
+	
+	find_shuaxintime = now
+	While DateDiff("s", find_shuaxintime, now) < 3
+		dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570,pic_path&"刷新.bmp", "000000", 0.95, 0, intX, intY
+
+		If intX > 0 And intY > 0 Then 
+			intX = intX + int(Rnd * 40 - 20) + 48 
+			intY = intY + int(Rnd * 40 - 20) + 20
+
+			TracePrint "点击刷新"
+			delay int(Rnd * 10 + 3)*yanchi
+			dm.MoveTo intX, intY//点击加上随机数之后的坐标
+			Call m_oneclick
+			
+			find_quedingtime = now
+			While DateDiff("s", find_quedingtime, now) < 2
+				dm.FindPic fanwei_x,fanwei_y,fanwei_x+960,fanwei_y+570,pic_path&"刷新确定.bmp", "000000", 0.9, 0, intX, intY
+
+				If intX > 0 And intY > 0 Then 
+					intX = intX + int(Rnd * 40 - 20) + 246
+					intY = intY + int(Rnd * 40 - 20) + 143
+
+					TracePrint "点击刷新"
+					delay int(Rnd * 10 + 3)*yanchi
+					dm.MoveTo intX, intY//点击加上随机数之后的坐标
+					Call m_oneclick
+				End if
+    		wend
+		end if
+		
+	wend
+    end if
+wend
+End Function
+Call 突破刷新
+
 
 Call 检查突破券数量
 Call 点击进攻
